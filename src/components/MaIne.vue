@@ -1,164 +1,66 @@
+<template>
+  <router-link style="display: flex" to="/LogIn">
+  <button style="margin:15px;margin-left: auto"  type="button" class="btn btn-primary" >LogIn</button>
+  </router-link>
+  <div class="entry-content">
+    <div class="registration">
+      <h1>Регистрация</h1>
+      <form @submit.prevent="registration">
+        <p>
+          <input type="text" v-model="username" placeholder="Логин" />
+        </p>
+        <p>
+          <input type="password" v-model="password" placeholder="Пароль" />
+        </p>
+
+        <p class="remember_me">
+          <label><input type="checkbox" name="remember_me" />Запомнить меня</label>
+        </p>
+        <p class="submit">
+          <input type="submit" value="Зарегистрироваться" />
+        </p>
+      </form>
+      <div v-if="errorMessage" class="error">{{ errorMessage }}</div>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+</template>
 <script>
 export default {
+  name: "API2Vue",
   data() {
     return {
-      Show: false,
+      username: "",
+      surname: "",
+      password: "",
+      token: null,
+      errorMessage: null,
     };
   },
   methods: {
-    handleKeydown(event) {
-      if (event.key === "Escape") {
-        this.Show = false;
+    async registration() {
+      try {
+        const response = await fetch("http://localhost:8000/api/user", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json", //Важно чтобы не было undefind
+          },
+          body: JSON.stringify({
+            //Преобразуем в json
+            name: this.username,
+            password: this.password,
+          }),
+        });
+
+        const data = await response.json();
+        this.token = data.token;
+        console.log("Регистрация успешна!");
+        // Дополнительные действия после успешной регистрации
+      } catch (error) {
+        this.errorMessage = "Ошибка регистрации";
+        console.error(this.errorMessage);
       }
     },
   },
-  mounted() {
-    document.addEventListener("keydown", this.handleKeydown);
-  },
 };
 </script>
-<template>
-  <div
-    class="Back"
-    style="
-      background-image: url('/ref.jpg');
-      background-repeat: no-repeat;
-      background-size: cover;
-
-      position: relative;
-
-      overflow: hidden;
-    "
-  >
-    <main>
-      <div class="flex">
-        <button
-          @click="Show = !Show"
-          style="width: 50px; border-width: 0px !important; height: 20px; margin: 10px"
-        >
-          <img src="../images/Email.jpg" />
-        </button>
-      </div>
-      <div
-        v-show="Show"
-        style="
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background-color: black;
-          opacity: 0.95;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          text-align: center;
-        "
-      >
-        <div
-          style="
-            border-radius: 20px;
-            border: 2px solid white;
-            position: relative;
-            width: 550px;
-            padding: 30px;
-            opacity: 1;
-          "
-        >
-          При возникновении вопросов или пожеланий, писать на почту mysytes2490@gmail.com
-          <button
-            type="button"
-            id="btn"
-            @click="Show = false"
-            style="height: 10px; position: absolute; right: 20px; top: 20px; width: 10px"
-          >
-            X
-          </button>
-        </div>
-      </div>
-      <section>
-        <a
-          class="fontt"
-          style="
-            color: white;
-            line-height: 2;
-            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-          "
-        >
-          Правила ОГЭ и устного собеседования
-        </a>
-      </section>
-      <br />
-      <section>
-        <div
-          style="
-            font-size: 20px;
-            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-            color: white;
-          "
-        >
-          <ul class="cats">
-            <button class="button" onclick="window.location.href='#/AboutMe'">
-              Информация об ОГЭ и собеседовании
-            </button>
-
-            <input
-              class="button"
-              type="button"
-              value="Русский язык"
-              onclick="window.location.href='#/RusIaz'"
-            />
-
-            <input
-              class="button"
-              type="button"
-              value="Математика"
-              onclick="window.location.href='#/MaTh'"
-            />
-
-            <input
-              class="button"
-              type="button"
-              value="Химия"
-              onclick="window.location.href='#/Chemistry'"
-            />
-
-            <input
-              class="button"
-              type="button"
-              value="Информатика"
-              onclick="window.location.href='#/Informatica'"
-            />
-          </ul>
-        </div>
-      </section>
-      <section>
-        <section
-          style="
-            margin: 10px;
-            border-color: white;
-            border-radius: 10px;
-            max-width: 500px;
-            width: 90wh;
-            border-width: 2px;
-            font-size: 20px;
-          "
-        >
-          Присоединяйтесь в мою группу тг для обсуждения решения задач и обычных бесед.
-          Всех был бы рад видеть)
-          <button style="border-width: 0px !important">
-            <a href="https://t.me/ogerules" style="color: green !important"
-              >https://t.me/ogerules</a
-            >
-          </button>
-        </section>
-      </section>
-    </main>
-  </div>
-</template>
-
-<style>
-* {
-  color: #cccccc;
-}
-</style>
